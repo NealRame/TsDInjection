@@ -13,17 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "offscreencanvas",
-      "webpack-env",
-      "mocha",
-      "chai"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
+    "types": [],
+    "paths": {},
     "lib": [
       "esnext",
       "dom",
