@@ -1,6 +1,8 @@
 import "reflect-metadata"
-import { cond, constant, isNil } from "lodash"
 
+import { isNil } from "lodash"
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface TConstructor<T = any> {
     new(...args: Array<never>): T
 }
@@ -44,6 +46,7 @@ function getServiceDefaultParameterMap(service: TConstructor):
 
 function Inject(service: TConstructor)
     : ParameterDecorator {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target: any, _: any, parameterIndex: number) => {
         const paramsMap = getServiceInjectionParameterMap(target)
         paramsMap.set(parameterIndex, service)
@@ -52,6 +55,7 @@ function Inject(service: TConstructor)
 
 function Default(value: unknown)
     : ParameterDecorator {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target: any, _: any, parameterIndex: number) => {
         const paramsMap = getServiceDefaultParameterMap(target)
         paramsMap.set(parameterIndex, value)
@@ -89,6 +93,7 @@ class Container {
         const parametersMeta = Reflect.getMetadata("design:paramtypes", service)
         const injectedParamsMap = getServiceInjectionParameterMap(service)
         const defaultParamsMap = getServiceDefaultParameterMap(service)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (parametersMeta ?? []).map((type: any, index: number) => {
             if (injectedParamsMap.has(index)) {
                 return this.get(injectedParamsMap.get(index) as TConstructor)
@@ -145,7 +150,7 @@ class Unit {
 
     move(position: { x: number, y: number })
         : this {
-        this.logger.log(`move: (${this.x_}, ${this.y_}) => (${position.x}, ${position.y})`)
+        this.logger.log(`unit: move (${this.x_}, ${this.y_}) => (${position.x}, ${position.y})`)
         this.x_ = position.x
         this.y_ = position.y
         return this
@@ -154,8 +159,8 @@ class Unit {
 
 const container = new Container()
 
-const logger = container.get(Logger)
-logger.log("create unit")
-
 const unit = container.get(Unit)
 unit.move({ x: 1, y: 2})
+
+const logger = container.get(Logger)
+logger.log("core: a message")
