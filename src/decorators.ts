@@ -1,16 +1,11 @@
 import "reflect-metadata"
 
-import { isNil } from "lodash"
-
 import {
     ServiceDefaultKey,
     ServiceInjectKey,
     ServiceLifecyclePropertyKey,
 } from "./constants"
 
-import {
-    ServiceNotFoundError
-} from "./errors"
 
 import {
     ServiceIdentifier,
@@ -20,13 +15,14 @@ import {
     TConstructor,
 } from "./types"
 
+export function getServiceParametersMetadata(service: TConstructor)
+    : Array<unknown> {
+    return Reflect.getMetadata("design:paramtypes", service) ?? []
+}
+
 export function getServiceLifecyle(service: TConstructor)
-    : ServiceLifecycle {
-    const lifecycle = Reflect.getMetadata(ServiceLifecyclePropertyKey, service)
-    if (!isNil(lifecycle)) {
-        return lifecycle
-    }
-    throw new ServiceNotFoundError(service)
+    : ServiceLifecycle | undefined {
+    return Reflect.getMetadata(ServiceLifecyclePropertyKey, service)
 }
 
 export function getServiceInjectionParameterMap(service: TConstructor)
