@@ -6,7 +6,6 @@ import {
     TConstructor,
 } from "./types"
 
-
 /**
  * Thrown when requested service was not found.
  */
@@ -25,7 +24,6 @@ export class ServiceNotFoundError extends Error {
         )
     }
 }
-
 
 export class ServiceAliasUndefined extends Error {
     public name = "ServiceNotFoundError"
