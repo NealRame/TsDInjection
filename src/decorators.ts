@@ -4,7 +4,6 @@ import {
     ServiceLifecyclePropertyKey,
 } from "./constants"
 
-
 import {
     ServiceIdentifier,
     ServiceLifecycle,
