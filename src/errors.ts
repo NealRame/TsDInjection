@@ -38,7 +38,7 @@ export class ServiceAliasUndefined extends Error {
     get message()
         : string {
         return (
-            `Service alias "${this.token_.name}" is undefined in the container.`
+            `Service alias "${this.token_.name}" undefined in the container.`
             + " Register it before usage by calling 'Container.alias' method."
         )
     }
