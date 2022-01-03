@@ -1,24 +1,24 @@
 import "reflect-metadata"
 
 import {
-    ServiceAliasUndefined,
-} from "./errors"
-
-import {
-    TConstructor,
-    ServiceLifecycle,
-} from "./types"
-
-import {
     getServiceDefaultParameterMap,
     getServiceInjectionParameterMap,
     getServiceLifecyle,
 } from "./decorators"
 
 import {
+    ServiceAliasUndefined,
+} from "./errors"
+
+import {
     ServiceToken,
 } from "./token"
-import { ServiceIdentifier } from "src"
+
+import {
+    TConstructor,
+    ServiceIdentifier,
+    ServiceLifecycle,
+} from "./types"
 
 export class Container {
     private aliases_ = new Map<ServiceToken, TConstructor>()
