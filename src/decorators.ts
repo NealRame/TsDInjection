@@ -9,16 +9,16 @@ import {
 } from "./constants"
 
 import {
-    TConstructor,
-    ServiceIdentifier,
-    ServiceLifecycle,
-    ServiceInjectionParametersMap,
-    ServiceDefaultParametersMap,
-} from "./types"
-
-import {
     ServiceNotFoundError
 } from "./errors"
+
+import {
+    ServiceIdentifier,
+    ServiceInjectionParametersMap,
+    ServiceDefaultParametersMap,
+    ServiceLifecycle,
+    TConstructor,
+} from "./types"
 
 export function getServiceLifecyle(service: TConstructor)
     : ServiceLifecycle {
