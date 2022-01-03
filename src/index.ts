@@ -1,7 +1,7 @@
 export {
-    Service,
     Default,
     Inject,
+    Service,
 } from "./decorators"
 
 export * from "./container"
