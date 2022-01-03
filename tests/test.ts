@@ -3,10 +3,12 @@ import {
     Default,
     Inject,
     Service,
-    ServiceLifecycle
+    ServiceLifecycle,
+    ServiceToken,
 } from "../src"
 
 let loggerId = 0
+const loggerToken = new ServiceToken<Logger>("logger")
 
 @Service(ServiceLifecycle.Singleton)
 class Logger {
@@ -24,7 +26,7 @@ class Unit {
     constructor(
         @Default(3.14) private x_: number,
         @Default(1.41) private y_: number,
-        @Inject("logger") public logger: Logger,
+        @Inject(loggerToken) public logger: Logger,
     ) { }
 
     get position()
@@ -46,7 +48,7 @@ class Unit {
 
 const container = new Container()
 
-container.alias("logger", Logger)
+container.alias(loggerToken, Logger)
 
 const unit = container.get(Unit)
 unit.move({ x: 1, y: 2})

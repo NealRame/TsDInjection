@@ -1,7 +1,11 @@
 import {
     ServiceToken,
+} from "./token"
+
+import {
     TConstructor,
 } from "./types"
+
 
 /**
  * Thrown when requested service was not found.
@@ -27,13 +31,13 @@ export class ServiceAliasUndefined extends Error {
     public name = "ServiceNotFoundError"
 
     constructor(
-        private identifier_: ServiceToken,
+        private token_: ServiceToken,
     ) { super() }
 
     get message()
         : string {
         return (
-            `Service alias "${this.identifier_}" is undefined in the container.`
+            `Service alias "${this.token_.name}" is undefined in the container.`
             + " Register it before usage by calling 'Container.alias' method."
         )
     }

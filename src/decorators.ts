@@ -10,7 +10,7 @@ import {
 
 import {
     TConstructor,
-    ServiceToken,
+    ServiceIdentifier,
     ServiceLifecycle,
     ServiceInjectionParametersMap,
     ServiceDefaultParametersMap,
@@ -29,7 +29,7 @@ export function getServiceLifecyle(service: TConstructor)
     throw new ServiceNotFoundError(service)
 }
 
-export function getServiceInjectionParameterMap(service: TConstructor | ServiceToken)
+export function getServiceInjectionParameterMap(service: TConstructor)
     : ServiceInjectionParametersMap {
     if (!Reflect.hasMetadata(ServiceInjectKey, service)) {
         Reflect.defineMetadata(ServiceInjectKey, new Map(), service)
@@ -50,7 +50,7 @@ export function Service(lifecycle: ServiceLifecycle)
     return Reflect.metadata(ServiceLifecyclePropertyKey, lifecycle)
 }
 
-export function Inject(service: TConstructor | ServiceToken)
+export function Inject(service: ServiceIdentifier)
     : ParameterDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target: any, _: any, parameterIndex: number) => {
@@ -59,7 +59,7 @@ export function Inject(service: TConstructor | ServiceToken)
     }
 }
 
-export function Default(value: unknown)
+export function Default(value: boolean | number | string | symbol)
     : ParameterDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target: any, _: any, parameterIndex: number) => {

@@ -6,4 +6,5 @@ export {
 
 export * from "./container"
 export * from "./errors"
+export * from "./token"
 export * from "./types"

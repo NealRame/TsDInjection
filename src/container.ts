@@ -6,7 +6,6 @@ import {
 
 import {
     TConstructor,
-    ServiceToken,
     ServiceLifecycle,
 } from "./types"
 
@@ -15,6 +14,11 @@ import {
     getServiceInjectionParameterMap,
     getServiceLifecyle,
 } from "./decorators"
+
+import {
+    ServiceToken,
+} from "./token"
+import { ServiceIdentifier } from "src"
 
 export class Container {
     private aliases_ = new Map<ServiceToken, TConstructor>()
@@ -47,18 +51,18 @@ export class Container {
         })
     }
 
-    alias(token: ServiceToken, service: TConstructor)
+    alias<T>(token: ServiceToken<T>, service: TConstructor<T>)
         : this {
         this.aliases_.set(token, service)
         return this
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    get<T = any>(service: TConstructor<T> | ServiceToken)
+    get<T>(service: ServiceIdentifier<T>)
         : T {
-        if (typeof service === "string") {
+        if (service instanceof ServiceToken) {
             if (this.aliases_.has(service)) {
-                return this.get(this.aliases_.get(service) as TConstructor)
+                return this.get(this.aliases_.get(service) as TConstructor<T>)
             }
             throw new ServiceAliasUndefined(service)
         }
