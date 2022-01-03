@@ -5,7 +5,6 @@ export interface TConstructor<T = any> {
     new(...args: Array<never>): T
 }
 
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceIdentifier<T = any> = TConstructor<T> | ServiceToken<T>
 
