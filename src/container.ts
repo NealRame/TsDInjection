@@ -3,13 +3,6 @@ import "reflect-metadata"
 import { isNil } from "lodash"
 
 import {
-    getServiceDefaultParameterMap,
-    getServiceInjectionParameterMap,
-    getServiceLifecyle,
-    getServiceParametersMetadata,
-} from "./decorators"
-
-import {
     ServiceAliasUndefined,
     ServiceNotFoundError,
 } from "./errors"
@@ -23,6 +16,13 @@ import {
     ServiceIdentifier,
     ServiceLifecycle,
 } from "./types"
+
+import {
+    getServiceDefaultParameterMap,
+    getServiceInjectionParameterMap,
+    getServiceLifecyle,
+    getServiceParametersMetadata,
+} from "./utils"
 
 export class Container {
     private aliases_ = new WeakMap<ServiceToken, TConstructor>()
