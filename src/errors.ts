@@ -25,6 +25,9 @@ export class ServiceNotFoundError extends Error {
     }
 }
 
+/**
+ * Thrown when requested alias was not found.
+ */
 export class ServiceAliasUndefined extends Error {
     public name = "ServiceNotFoundError"
 
