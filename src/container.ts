@@ -57,7 +57,6 @@ export class Container {
         return this
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     get<T>(service: ServiceIdentifier<T>)
         : T {
         if (service instanceof ServiceToken) {
