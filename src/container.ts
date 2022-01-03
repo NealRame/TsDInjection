@@ -3,10 +3,10 @@ import "reflect-metadata"
 import { isNil } from "lodash"
 
 import {
-    getServiceParametersMetadata,
     getServiceDefaultParameterMap,
     getServiceInjectionParameterMap,
     getServiceLifecyle,
+    getServiceParametersMetadata,
 } from "./decorators"
 
 import {
