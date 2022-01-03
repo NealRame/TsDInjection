@@ -25,8 +25,8 @@ import {
 } from "./types"
 
 export class Container {
-    private aliases_ = new Map<ServiceToken, TConstructor>()
-    private singletons_ = new Map<TConstructor, unknown>()
+    private aliases_ = new WeakMap<ServiceToken, TConstructor>()
+    private singletons_ = new WeakMap<TConstructor, unknown>()
 
     private injectServiceParameters_(service: TConstructor) {
         const parametersMeta = getServiceParametersMetadata(service)
