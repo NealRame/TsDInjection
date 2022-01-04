@@ -20,7 +20,7 @@ import {
 import {
     getServiceDefaultParameterMap,
     getServiceInjectionParameterMap,
-    getServiceLifecyle,
+    getServiceMetadata,
     getServiceParametersMetadata,
 } from "./utils"
 
@@ -59,11 +59,11 @@ export class Container {
 
     private injectClassService_<T>(service: TConstructor<T>)
         : T {
-        const lifecycle = getServiceLifecyle(service)
-        if (isNil(lifecycle)) {
+        const metadata = getServiceMetadata(service)
+        if (isNil(metadata)) {
             throw new ServiceNotFoundError(service)
         }
-        return (lifecycle === ServiceLifecycle.Singleton
+        return (metadata.lifecycle === ServiceLifecycle.Singleton
             ? this.injectSingleton_(service)
             : this.injectTransient_(service)
         ) as T

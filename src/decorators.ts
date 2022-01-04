@@ -1,12 +1,13 @@
 import "reflect-metadata"
 
 import {
-    ServiceLifecyclePropertyKey,
+    ServiceMetadataKey,
 } from "./constants"
 
 import {
     ServiceIdentifier,
     ServiceLifecycle,
+    ServiceMetadata,
 } from "./types"
 
 import {
@@ -14,9 +15,14 @@ import {
     getServiceInjectionParameterMap,
 } from "./utils"
 
-export function Service(lifecycle: ServiceLifecycle)
+export function Service(metadata?: Partial<ServiceMetadata>)
     : ClassDecorator {
-    return Reflect.metadata(ServiceLifecyclePropertyKey, lifecycle)
+    return Reflect.metadata(
+        ServiceMetadataKey,
+        Object.assign({
+            lifecycle: ServiceLifecycle.Transient
+        }, metadata)
+    )
 }
 
 export function Inject(service: ServiceIdentifier)

@@ -15,3 +15,7 @@ export enum ServiceLifecycle {
     Singleton,
     Transient,
 }
+
+export interface ServiceMetadata {
+    lifecycle: ServiceLifecycle
+}

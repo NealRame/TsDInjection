@@ -10,7 +10,7 @@ import {
 let loggerId = 0
 const loggerToken = new ServiceToken<Logger>("logger")
 
-@Service(ServiceLifecycle.Singleton)
+@Service({ lifecycle: ServiceLifecycle.Singleton })
 class Logger {
     private id_: number
     constructor() {
@@ -21,7 +21,7 @@ class Logger {
     }
 }
 
-@Service(ServiceLifecycle.Transient)
+@Service({ lifecycle: ServiceLifecycle.Transient })
 class Unit {
     constructor(
         @Default(3.14) private x_: number,

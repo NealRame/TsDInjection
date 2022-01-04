@@ -3,14 +3,14 @@ import "reflect-metadata"
 import {
     ServiceDefaultKey,
     ServiceInjectKey,
-    ServiceLifecyclePropertyKey,
+    ServiceMetadataKey,
 } from "./constants"
 
 
 import {
     ServiceInjectionParametersMap,
     ServiceDefaultParametersMap,
-    ServiceLifecycle,
+    ServiceMetadata,
     TConstructor,
 } from "./types"
 
@@ -19,9 +19,9 @@ export function getServiceParametersMetadata(service: TConstructor)
     return Reflect.getMetadata("design:paramtypes", service) ?? []
 }
 
-export function getServiceLifecyle(service: TConstructor)
-    : ServiceLifecycle | undefined {
-    return Reflect.getMetadata(ServiceLifecyclePropertyKey, service)
+export function getServiceMetadata(service: TConstructor)
+    : ServiceMetadata | undefined {
+    return Reflect.getMetadata(ServiceMetadataKey, service)
 }
 
 export function getServiceInjectionParameterMap(service: TConstructor)
