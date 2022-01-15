@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import "reflect-metadata"
 
 import {
@@ -27,7 +29,6 @@ export function Service(metadata?: Partial<ServiceMetadata>)
 
 export function Inject(service: ServiceIdentifier)
     : ParameterDecorator {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target: any, _: any, parameterIndex: number) => {
         const paramsMap = getServiceInjectionParameterMap(target)
         paramsMap.set(parameterIndex, service)
@@ -36,7 +37,6 @@ export function Inject(service: ServiceIdentifier)
 
 export function Default(value: boolean | number | string | symbol)
     : ParameterDecorator {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target: any, _: any, parameterIndex: number) => {
         const paramsMap = getServiceDefaultParameterMap(target)
         paramsMap.set(parameterIndex, value)
