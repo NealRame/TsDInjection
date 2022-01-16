@@ -7,8 +7,8 @@ import {
 } from "./constants"
 
 import {
-    ServiceInjectionParametersMap,
     ServiceDefaultParametersMap,
+    ServiceInjectionParametersMap,
     ServiceMetadata,
     TConstructor,
 } from "./types"
