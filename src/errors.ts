@@ -6,6 +6,9 @@ import {
     TConstructor,
 } from "./types"
 
+/**
+ * Thrown when an incoherent event happened.
+ */
 export class ContainerInternalError extends Error {
     public name = "ContainerInternalError"
     get message()
