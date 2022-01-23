@@ -9,15 +9,32 @@ import {
 
 let loggerId = 0
 
+const loggerToken = new Token<Logger>("logger")
+const loggerFormat = new Token<string>("logger.format")
+
 @Service({ lifecycle: ServiceLifecycle.Singleton })
 class Logger {
-    public static token = new Token<Logger>("logger")
     private id_: number
-    constructor() {
+    constructor(
+        @Inject(loggerFormat) private format_: string
+    ) {
         this.id_ = ++loggerId
     }
-    log(message: string) {
-        console.log(`[${this.id_}@${Date.now()}] ${message}`)
+
+    log(message: string)
+        : void {
+        const date = new Date()
+        console.log(this.format_
+            .replace("%D", `${date.getDate()}`.padStart(2, "0"))
+            .replace("%M", `${date.getMonth() + 1}`.padStart(2, "0"))
+            .replace("%Y", `${date.getFullYear()}`)
+            .replace("%s", `${date.getSeconds()}`.padStart(2, "0"))
+            .replace("%m", `${date.getMinutes()}`.padStart(2, "0"))
+            .replace("%h", `${date.getHours()}`.padStart(2, "0"))
+            .replace("%i", `${this.id_}`)
+            .replace("%l", message)
+            .replace("%%", "%")
+        )
     }
 }
 
@@ -26,7 +43,7 @@ class Unit {
     constructor(
         @Default(3.14) private x_: number,
         @Default(1.41) private y_: number,
-        @Inject(Logger.token) public logger: Logger,
+        @Inject(loggerToken) public logger: Logger,
     ) { }
 
     get position()
@@ -47,16 +64,13 @@ class Unit {
 }
 
 const container = new Container()
-const valueToken = new Token<number>("value")
 
 container
-    .set(Logger.token, Logger)
-    .set(valueToken, 42)
+    .set(loggerFormat, "LOG#%i[%D/%M/%Y - %h:%m:%s] %l")
+    .set(loggerToken, Logger)
 
 const unit = container.get(Unit)
 unit.move({ x: 1, y: 2})
 
 const logger = container.get(Logger)
 logger.log("core: a message")
-
-logger.log(`value: ${container.get(valueToken)}`)
