@@ -1,10 +1,18 @@
 import {
-    ServiceToken,
+    Token,
 } from "./token"
 
 import {
     TConstructor,
 } from "./types"
+
+export class ContainerInternalError extends Error {
+    public name = "ContainerInternalError"
+    get message()
+        : string {
+        return "Container internal error"
+    }
+}
 
 /**
  * Thrown when requested service was not found.
@@ -28,18 +36,18 @@ export class ServiceNotFoundError extends Error {
 /**
  * Thrown when requested alias was not found.
  */
-export class ServiceAliasUndefined extends Error {
-    public name = "ServiceNotFoundError"
+export class ServiceAliasOrValueUndefined extends Error {
+    public name = "ServiceAliasOrValueUndefined"
 
     constructor(
-        private token_: ServiceToken,
+        private token_: Token,
     ) { super() }
 
     get message()
         : string {
         return (
-            `Service alias "${this.token_.name}" undefined in the container.`
-            + " Register it before usage by calling 'Container.alias' method."
+            `Service alias or value "${this.token_.name}" is undefined.`
+            + " Register it before usage by calling 'Container#set' method."
         )
     }
 }

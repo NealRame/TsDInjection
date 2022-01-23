@@ -4,14 +4,14 @@ import {
     Inject,
     Service,
     ServiceLifecycle,
-    ServiceToken,
+    Token,
 } from "../src"
 
 let loggerId = 0
-const loggerToken = new ServiceToken<Logger>("logger")
 
 @Service({ lifecycle: ServiceLifecycle.Singleton })
 class Logger {
+    public static token = new Token<Logger>("logger")
     private id_: number
     constructor() {
         this.id_ = ++loggerId
@@ -26,7 +26,7 @@ class Unit {
     constructor(
         @Default(3.14) private x_: number,
         @Default(1.41) private y_: number,
-        @Inject(loggerToken) public logger: Logger,
+        @Inject(Logger.token) public logger: Logger,
     ) { }
 
     get position()
@@ -47,11 +47,16 @@ class Unit {
 }
 
 const container = new Container()
+const valueToken = new Token<number>("value")
 
-container.alias(loggerToken, Logger)
+container
+    .set(Logger.token, Logger)
+    .set(valueToken, 42)
 
 const unit = container.get(Unit)
 unit.move({ x: 1, y: 2})
 
 const logger = container.get(Logger)
 logger.log("core: a message")
+
+logger.log(`value: ${container.get(valueToken)}`)

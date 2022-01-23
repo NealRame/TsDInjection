@@ -13,6 +13,12 @@ import {
     TConstructor,
 } from "./types"
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function isService(item: Function)
+    : boolean {
+    return Reflect.hasMetadata(ServiceMetadataKey, item)
+}
+
 export function getServiceParametersMetadata(service: TConstructor)
     : Array<unknown> {
     return Reflect.getMetadata("design:paramtypes", service) ?? []

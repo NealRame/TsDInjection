@@ -3,12 +3,13 @@ import "reflect-metadata"
 import { isNil } from "lodash"
 
 import {
-    ServiceAliasUndefined,
+    ContainerInternalError,
+    ServiceAliasOrValueUndefined,
     ServiceNotFoundError,
 } from "./errors"
 
 import {
-    ServiceToken,
+    Token,
 } from "./token"
 
 import {
@@ -22,10 +23,12 @@ import {
     getServiceInjectionParameterMap,
     getServiceMetadata,
     getServiceParametersMetadata,
+    isService,
 } from "./utils"
 
 export class Container {
-    private aliases_ = new WeakMap<ServiceToken, TConstructor>()
+    private aliases_ = new WeakMap<Token, TConstructor>()
+    private values_ = new WeakMap<Token, unknown>()
     private singletons_ = new WeakMap<TConstructor, unknown>()
 
     private injectServiceParameters_(service: TConstructor) {
@@ -69,25 +72,36 @@ export class Container {
         ) as T
     }
 
-    private injectAliasedService_<T>(service: ServiceToken<T>)
+    private injectAliasedService_<T>(service: Token<T>)
         : T {
         const classService = this.aliases_.get(service)
         if (isNil(classService)) {
-            throw new ServiceAliasUndefined(service)
+            throw new ContainerInternalError()
         }
         return this.injectClassService_(classService as TConstructor<T>)
     }
 
-    alias<T>(token: ServiceToken<T>, service: TConstructor<T>)
+    set<T>(token: Token<T>, value: T | TConstructor<T>)
         : this {
-        this.aliases_.set(token, service)
+        if (typeof value === "function" && isService(value)) {
+            this.aliases_.set(token, value as TConstructor<T>)
+        } else {
+            this.values_.set(token, value)
+        }
         return this
     }
 
-    get<T>(service: ServiceIdentifier<T>)
+    get<T>(id: ServiceIdentifier<T>)
         : T {
-        return service instanceof ServiceToken
-            ? this.injectAliasedService_(service)
-            : this.injectClassService_(service)
+        if (id instanceof Token) {
+            if (this.values_.has(id)) {
+                return this.values_.get(id) as T
+            }
+            if (this.aliases_.has(id)) {
+                return this.injectAliasedService_(id)
+            }
+            throw new ServiceAliasOrValueUndefined(id)
+        }
+        return this.injectClassService_(id)
     }
 }

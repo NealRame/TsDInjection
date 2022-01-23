@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
- * Service token are used to alias registered service.
+ * Token are used to alias registered service or set value into a container.
  */
-export class ServiceToken<T = any> {
+export class Token<T = any> {
     constructor(public name: string) {}
 }
