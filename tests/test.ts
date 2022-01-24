@@ -7,34 +7,78 @@ import {
     Token,
 } from "../src"
 
-let loggerId = 0
+enum LogLevel {
+    Error,
+    Warning,
+    Notice,
+    Debug,
+}
 
 const loggerToken = new Token<Logger>("logger")
+const loggerLevel = new Token<LogLevel>("logger.level")
 const loggerFormat = new Token<string>("logger.format")
 
 @Service({ lifecycle: ServiceLifecycle.Singleton })
 class Logger {
-    private id_: number
+    private formatMessage_(message: string, level: LogLevel)
+        : string {
+        const levels = ["ERROR", "WARNING", "NOTICE", "DEBUG"]
+        const date = new Date()
+        return this.format_
+            .replace("%day", `${date.getDate()}`.padStart(2, "0"))
+            .replace("%month", `${date.getMonth() + 1}`.padStart(2, "0"))
+            .replace("%year", `${date.getFullYear()}`)
+            .replace("%seconds", `${date.getSeconds()}`.padStart(2, "0"))
+            .replace("%minutes", `${date.getMinutes()}`.padStart(2, "0"))
+            .replace("%hours", `${date.getHours()}`.padStart(2, "0"))
+            .replace("%message", message)
+            .replace("%level", `${levels[level]}`)
+            .replace("%%", "%")
+    }
+
     constructor(
-        @Inject(loggerFormat) private format_: string
-    ) {
-        this.id_ = ++loggerId
+        @Inject(loggerFormat) private format_: string,
+        @Inject(loggerLevel) private level_: LogLevel,
+    ) { }
+
+    error(message: string)
+        : this {
+        console.error(this.formatMessage_(
+            message,
+            LogLevel.Error
+        ))
+        return this
+    }
+
+    warning(message: string)
+        : this {
+        if (this.level_ >= LogLevel.Warning) {
+            console.warn(this.formatMessage_(
+                message,
+                LogLevel.Warning
+            ))
+        }
+        return this
     }
 
     log(message: string)
         : void {
-        const date = new Date()
-        console.log(this.format_
-            .replace("%D", `${date.getDate()}`.padStart(2, "0"))
-            .replace("%M", `${date.getMonth() + 1}`.padStart(2, "0"))
-            .replace("%Y", `${date.getFullYear()}`)
-            .replace("%s", `${date.getSeconds()}`.padStart(2, "0"))
-            .replace("%m", `${date.getMinutes()}`.padStart(2, "0"))
-            .replace("%h", `${date.getHours()}`.padStart(2, "0"))
-            .replace("%i", `${this.id_}`)
-            .replace("%l", message)
-            .replace("%%", "%")
-        )
+        if (this.level_ >= LogLevel.Notice) {
+            console.log(this.formatMessage_(
+                message,
+                LogLevel.Notice
+            ))
+        }
+    }
+
+    debug(message: string)
+        : void {
+        if (this.level_ >= LogLevel.Debug) {
+            console.log(this.formatMessage_(
+                message,
+                LogLevel.Debug
+            ))
+        }
     }
 }
 
@@ -56,7 +100,7 @@ class Unit {
 
     move(position: { x: number, y: number })
         : this {
-        this.logger.log(`unit: move (${this.x_}, ${this.y_}) => (${position.x}, ${position.y})`)
+        this.logger.debug(`unit: move (${this.x_}, ${this.y_}) => (${position.x}, ${position.y})`)
         this.x_ = position.x
         this.y_ = position.y
         return this
@@ -66,7 +110,8 @@ class Unit {
 const container = new Container()
 
 container
-    .set(loggerFormat, "LOG#%i[%D/%M/%Y - %h:%m:%s] %l")
+    .set(loggerFormat, "%level[%day/%month/%year - %hours:%minutes:%seconds] %message")
+    .set(loggerLevel, LogLevel.Debug)
     .set(loggerToken, Logger)
 
 const unit = container.get(Unit)
