@@ -39,7 +39,7 @@ export class Container {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return parametersMeta.map((type: any, index: number) => {
             if (injectedParamsMap.has(index)) {
-                return this.get(injectedParamsMap.get(index) as TConstructor)
+                return this.get(injectedParamsMap.get(index) as ServiceIdentifier)
             }
             if (defaultParamsMap.has(index)) {
                 return defaultParamsMap.get(index)
