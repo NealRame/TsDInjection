@@ -115,7 +115,7 @@ container
     .set(loggerToken, Logger)
 
 const unit = container.get(Unit)
-unit.move({ x: 1, y: 2})
+unit.move({ x: 1, y: 2 })
 
 const logger = container.get(Logger)
 logger.log("core: a message")
