@@ -8,8 +8,11 @@ export interface TConstructor<T = any> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceIdentifier<T = any> = TConstructor<T> | Token<T>
 
-export type ServiceInjectionParametersMap = Map<number, ServiceIdentifier>
-export type ServiceDefaultParametersMap = Map<number, unknown>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ServiceParameterMetadata<T = any> = {
+    service?: ServiceIdentifier<T>,
+    fallback?: T,
+}
 
 export enum ServiceLifecycle {
     Singleton,
@@ -17,5 +20,6 @@ export enum ServiceLifecycle {
 }
 
 export interface ServiceMetadata {
-    lifecycle: ServiceLifecycle
+    lifecycle: ServiceLifecycle,
+    parameters: Map<number, ServiceParameterMetadata>,
 }

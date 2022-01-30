@@ -20,10 +20,13 @@ const loggerFormat = new Token<string>("logger.format")
 
 @Service({ lifecycle: ServiceLifecycle.Singleton })
 class Logger {
+    private static nextId_ = 0
+    private id_: number
     private formatMessage_(message: string, level: LogLevel)
         : string {
         const levels = ["ERROR", "WARNING", "NOTICE", "DEBUG"]
         const date = new Date()
+        console.log("DEBUG DEBUG", this.id_, this.format_)
         return this.format_
             .replace("%day", `${date.getDate()}`.padStart(2, "0"))
             .replace("%month", `${date.getMonth() + 1}`.padStart(2, "0"))
@@ -39,7 +42,9 @@ class Logger {
     constructor(
         @Inject(loggerFormat) private format_: string,
         @Inject(loggerLevel) private level_: LogLevel,
-    ) { }
+    ) { 
+        this.id_ = ++Logger.nextId_
+    }
 
     error(message: string)
         : this {
@@ -107,6 +112,19 @@ class Unit {
     }
 }
 
+class Building {
+    constructor(
+        @Default(0) private x_: number,
+        @Default(0) private y_: number,
+        @Inject(Logger) private logger_: Logger,
+    ) { }
+
+    repair()
+        : void {
+        this.logger_.debug(`building: repair (${this.x_}, ${this.y_})`)
+    }
+}
+
 const container = new Container()
 
 container
@@ -114,8 +132,16 @@ container
     .set(loggerLevel, LogLevel.Debug)
     .set(loggerToken, Logger)
 
-const unit = container.get(Unit)
-unit.move({ x: 1, y: 2 })
-
 const logger = container.get(Logger)
 logger.log("core: a message")
+
+const unit = container.get(Unit)
+unit.move({ x: 1, y: 2 })
+unit.move({ x: 2, y: 2 })
+unit.move({ x: 3, y: 3 })
+
+
+const building = container.get(Building)
+building.repair()
+building.repair()
+building.repair()
