@@ -6,7 +6,6 @@ import {
 import { ServiceNotFoundError } from "./errors"
 
 import {
-    ServiceLifecycle,
     ServiceMetadata,
     TConstructor,
 } from "./types"

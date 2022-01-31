@@ -18,21 +18,20 @@ import {
     isService,
 } from "./utils"
 
-const ServiceMetadataDefault: ServiceMetadata = {
-    lifecycle: ServiceLifecycle.Transient,
-    parameters: new Map(),
-}
-
 function getServiceOrCreate(service: TConstructor)
     : ServiceMetadata {
     if (!isService(service)) {
         Reflect.defineMetadata(
             ServiceMetadataKey,
-            ServiceMetadataDefault,
+            {
+                lifecycle: ServiceLifecycle.Transient,
+                parameters: new Map(),
+            },
             service
         )
     }
-    return getServiceMetadata(service)
+    const metadata = getServiceMetadata(service)
+    return metadata
 }
 
 export function Service(metadata?: Partial<Omit<ServiceMetadata, "parameters">>)
@@ -51,7 +50,7 @@ export function Inject(service: ServiceIdentifier)
     return (target: any, _: any, parameterIndex: number) => {
         const { parameters } = getServiceOrCreate(target)
         parameters.set(parameterIndex, {
-            ...(parameters.get(parameterIndex) ?? {}),
+            ...parameters.get(parameterIndex),
             service,
         })
     }
@@ -62,7 +61,7 @@ export function Default(fallback: boolean | number | string | symbol)
     return (target: any, _: any, parameterIndex: number) => {
         const { parameters } = getServiceOrCreate(target)
         parameters.set(parameterIndex, {
-            ...(parameters.get(parameterIndex) ?? {}),
+            ...parameters.get(parameterIndex),
             fallback,
         })
         getServiceMetadata(target).parameters = parameters

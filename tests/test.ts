@@ -20,13 +20,10 @@ const loggerFormat = new Token<string>("logger.format")
 
 @Service({ lifecycle: ServiceLifecycle.Singleton })
 class Logger {
-    private static nextId_ = 0
-    private id_: number
     private formatMessage_(message: string, level: LogLevel)
         : string {
         const levels = ["ERROR", "WARNING", "NOTICE", "DEBUG"]
         const date = new Date()
-        console.log("DEBUG DEBUG", this.id_, this.format_)
         return this.format_
             .replace("%day", `${date.getDate()}`.padStart(2, "0"))
             .replace("%month", `${date.getMonth() + 1}`.padStart(2, "0"))
@@ -40,11 +37,13 @@ class Logger {
     }
 
     constructor(
-        @Inject(loggerFormat) private format_: string,
-        @Inject(loggerLevel) private level_: LogLevel,
-    ) { 
-        this.id_ = ++Logger.nextId_
-    }
+        @Inject(loggerFormat)
+        @Default("%level[%day/%month/%year - %hours:%minutes:%seconds] %message")
+        private format_: string,
+
+        @Inject(loggerLevel)
+        private level_: LogLevel,
+    ) { }
 
     error(message: string)
         : this {
@@ -113,11 +112,15 @@ class Unit {
 }
 
 class Building {
+    private x_: number
+    private y_: number
+
     constructor(
-        @Default(0) private x_: number,
-        @Default(0) private y_: number,
         @Inject(Logger) private logger_: Logger,
-    ) { }
+    ) {
+        this.x_ = 0
+        this.y_ = 0
+    }
 
     repair()
         : void {
@@ -128,18 +131,18 @@ class Building {
 const container = new Container()
 
 container
-    .set(loggerFormat, "%level[%day/%month/%year - %hours:%minutes:%seconds] %message")
+    // .set(loggerFormat, "%level[%hours:%minutes:%seconds] %message")
     .set(loggerLevel, LogLevel.Debug)
     .set(loggerToken, Logger)
 
 const logger = container.get(Logger)
-logger.log("core: a message")
+
+logger.log("core: a core message")
 
 const unit = container.get(Unit)
 unit.move({ x: 1, y: 2 })
 unit.move({ x: 2, y: 2 })
 unit.move({ x: 3, y: 3 })
-
 
 const building = container.get(Building)
 building.repair()

@@ -37,9 +37,9 @@ export class Container {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return parametersMeta.map((type: any, index: number) => {
             if (serviceParametersMeta.has(index)) {
-                const { service, fallback } = serviceParametersMeta.get(index) as ServiceParameterMetadata
-                if (!isNil(service)) {
-                    return this.get(service, fallback)
+                const parameterMeta = serviceParametersMeta.get(index) as ServiceParameterMetadata
+                if (!isNil(parameterMeta.service)) {
+                    return this.get(parameterMeta.service, parameterMeta.fallback)
                 }
             }
             return type()
@@ -72,13 +72,11 @@ export class Container {
         throw new ServiceNotFoundError(service)
     }
 
-    private injectAliasedService_<T>(service: Token<T>, fallback?: T)
+    private injectAliasedService_<T>(service: Token<T>)
         : T {
         const classService = this.aliases_.get(service)
         if (isNil(classService)) {
-            if (isNil(fallback)) {
-                throw new ContainerInternalError()
-            } else return fallback
+            throw new ContainerInternalError()
         }
         return this.injectClassService_(classService as TConstructor<T>)
     }
@@ -99,7 +97,9 @@ export class Container {
             if (this.values_.has(id)) {
                 return this.values_.get(id) as T
             } else if (this.aliases_.has(id)) {
-                return this.injectAliasedService_(id, fallback)
+                return this.injectAliasedService_(id)
+            } else if (!isNil(fallback)) {
+                return fallback
             }
             throw new ServiceAliasOrValueUndefined(id)
         }
