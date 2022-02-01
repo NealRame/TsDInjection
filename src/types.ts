@@ -21,5 +21,6 @@ export enum ServiceLifecycle {
 
 export interface ServiceMetadata {
     lifecycle: ServiceLifecycle,
+    factory?: CallableFunction,
     parameters: Map<number, ServiceParameterMetadata>,
 }

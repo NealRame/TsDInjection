@@ -17,6 +17,7 @@ import {
     ServiceIdentifier,
     ServiceLifecycle,
     ServiceParameterMetadata,
+    ServiceMetadata,
 } from "./types"
 
 import {
@@ -46,14 +47,21 @@ export class Container {
         })
     }
 
-    private injectTransient_(service: TConstructor) {
-        const params = this.injectServiceParameters_(service)
-        return Reflect.construct(service, params)
+    private injectTransient_(service: TConstructor, serviceMetadata: ServiceMetadata) {
+        if (isNil(serviceMetadata.factory)) {
+            const params = this.injectServiceParameters_(service)
+            return Reflect.construct(service, params)
+        } else {
+            return serviceMetadata.factory(this)
+        }
     }
 
-    private injectSingleton_(service: TConstructor) {
+    private injectSingleton_(service: TConstructor, serviceMetadata: ServiceMetadata) {
         if (!this.singletons_.has(service)) {
-            this.singletons_.set(service, this.injectTransient_(service))
+            this.singletons_.set(
+                service,
+                this.injectTransient_(service, serviceMetadata),
+            )
         }
         return this.singletons_.get(service)
     }
@@ -63,8 +71,8 @@ export class Container {
         if (isService(service)) {
             const metadata = getServiceMetadata(service)
             return (metadata.lifecycle === ServiceLifecycle.Singleton
-                ? this.injectSingleton_(service)
-                : this.injectTransient_(service)
+                ? this.injectSingleton_(service, metadata)
+                : this.injectTransient_(service, metadata)
             ) as T
         } else if (!isNil(fallback)) {
             return fallback

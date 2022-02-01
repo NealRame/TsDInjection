@@ -128,10 +128,24 @@ class Building {
     }
 }
 
+@Service({
+    factory: (container: Container) => {
+        return new Land(0, 0, container.get(loggerToken))
+    }
+})
+class Land {
+    constructor(
+        private width_: number,
+        private height_: number,
+        private logger_: Logger,
+    ) {
+        this.logger_.debug("Terrain factory called")
+    }
+}
+
 const container = new Container()
 
 container
-    // .set(loggerFormat, "%level[%hours:%minutes:%seconds] %message")
     .set(loggerLevel, LogLevel.Debug)
     .set(loggerToken, Logger)
 
@@ -148,3 +162,5 @@ const building = container.get(Building)
 building.repair()
 building.repair()
 building.repair()
+
+const land = container.get(Land)
