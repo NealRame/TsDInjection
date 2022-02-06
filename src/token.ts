@@ -4,6 +4,10 @@
 /**
  * Token are used to alias registered service or set value into a container.
  */
-export class Token<T = any> {
-    constructor(public name: string) {}
+ export class Token<T = any> {
+    constructor(private name_: string) {}
+
+    get name(): string {
+        return this.name_
+    }
 }
