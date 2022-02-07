@@ -5,10 +5,6 @@ import {
 } from "./constants"
 
 import {
-    Token
-} from "./token"
-
-import {
     ServiceMetadata,
     TConstructor,
 } from "./types"
