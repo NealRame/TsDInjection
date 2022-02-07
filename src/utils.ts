@@ -3,12 +3,17 @@ import "reflect-metadata"
 import {
     ServiceMetadataKey,
 } from "./constants"
-import { ServiceNotFoundError } from "./errors"
+
+import {
+    Token
+} from "./token"
 
 import {
     ServiceMetadata,
     TConstructor,
 } from "./types"
+
+import { ServiceNotFoundError } from "./errors"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function isService(item: Function)
