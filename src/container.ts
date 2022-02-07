@@ -89,6 +89,31 @@ export class Container {
         return this.injectClassService_(classService as TConstructor<T>)
     }
 
+    has(id: ServiceIdentifier)
+        : boolean {
+        if (Token.isToken(id)) {
+            return this.values_.has(id) || this.aliases_.has(id)
+        }
+        return isService(id)
+    }
+
+    get<T>(id: ServiceIdentifier<T>, fallback?: T)
+        : T {
+        if (Token.isToken(id)) {
+            if (this.values_.has(id)) {
+                return this.values_.get(id) as T
+            }
+            if (this.aliases_.has(id)) {
+                return this.injectAliasedService_(id)
+            }
+            if (!isNil(fallback)) {
+                return fallback
+            }
+            throw new ServiceAliasOrValueUndefined(id)
+        }
+        return this.injectClassService_(id, fallback)
+    }
+
     set<T>(token: Token<T>, value: T | TConstructor<T>)
         : this {
         if (typeof value === "function" && isService(value)) {
@@ -97,20 +122,5 @@ export class Container {
             this.values_.set(token, value)
         }
         return this
-    }
-
-    get<T>(id: ServiceIdentifier<T>, fallback?: T)
-        : T {
-        if (id instanceof Token) {
-            if (this.values_.has(id)) {
-                return this.values_.get(id) as T
-            } else if (this.aliases_.has(id)) {
-                return this.injectAliasedService_(id)
-            } else if (!isNil(fallback)) {
-                return fallback
-            }
-            throw new ServiceAliasOrValueUndefined(id)
-        }
-        return this.injectClassService_(id, fallback)
     }
 }
