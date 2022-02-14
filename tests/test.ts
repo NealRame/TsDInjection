@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
     Container,
     Default,
@@ -128,19 +129,28 @@ class Building {
     }
 }
 
-@Service({
-    factory: (container: Container) => {
-        return new Land(0, 0, container.get(loggerToken))
+@Service({ lifecycle: ServiceLifecycle.Singleton })
+class LandFactory {
+    constructor(
+        @Inject(loggerToken) private logger_: Logger
+    ) { }
+
+    create(): Land {
+        this.logger_.debug("LandFactory create a new Land")
+        return new Land(0, 0, this.logger_)
     }
+}
+
+
+@Service({
+    factoryClass: LandFactory
 })
 class Land {
     constructor(
         private width_: number,
         private height_: number,
         private logger_: Logger,
-    ) {
-        this.logger_.debug("Terrain factory called")
-    }
+    ) { }
 }
 
 const container = new Container()

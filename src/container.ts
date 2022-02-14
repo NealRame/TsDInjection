@@ -48,12 +48,19 @@ export class Container {
     }
 
     private injectTransient_(service: TConstructor, serviceMetadata: ServiceMetadata) {
-        if (isNil(serviceMetadata.factory)) {
-            const params = this.injectServiceParameters_(service)
-            return Reflect.construct(service, params)
-        } else {
-            return serviceMetadata.factory(this)
+        if (!isNil(serviceMetadata.factoryFunction)) {
+            return serviceMetadata.factoryFunction(this)
         }
+
+        if (!isNil(serviceMetadata.factoryClass)) {
+            const factory = this.has(serviceMetadata.factoryClass)
+                ? this.get(serviceMetadata.factoryClass)
+                : new serviceMetadata.factoryClass()
+            return factory.create(this)
+        }
+
+        const params = this.injectServiceParameters_(service)
+        return Reflect.construct(service, params)
     }
 
     private injectSingleton_(service: TConstructor, serviceMetadata: ServiceMetadata) {
