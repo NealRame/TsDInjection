@@ -24,8 +24,8 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
+    "injector/**/*.ts",
+    "injector/**/*.tsx",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],

@@ -1,23 +1,5 @@
-# TsDInjection
-A simple Dependency Injection tool for Typescript
+# ts-injection-tests
+Use the test ts-injection project. 
 
-## API
-
-### Container
-#### Container#set
-
-##### Synopsis
-
-#### Container#get
-
-##### Synopsis
-
-### Token
-
-### Decorators
-
-#### Service
-
-#### Inject
-
-#### Default
+See (ts-injection project)[https://github.com/NealRame/ts-injector] for more
+details.
