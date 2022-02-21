@@ -6,7 +6,7 @@ import {
     Service,
     ServiceLifecycle,
     Token,
-} from "../injector"
+} from "../../injector"
 
 enum LogLevel {
     Error,

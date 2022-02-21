@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "ts-node ./tests/test.ts"
+    "start": "ts-node ./tests/api/test.ts"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.178",
