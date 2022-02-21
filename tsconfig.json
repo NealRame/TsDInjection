@@ -14,7 +14,10 @@
     "sourceMap": true,
     "outDir": "out",
     "baseUrl": ".",
-    "types": [],
+    "types": [
+      "chai",
+      "mocha"
+    ],
     "paths": {},
     "lib": [
       "esnext",
