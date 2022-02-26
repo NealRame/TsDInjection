@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "start": "ts-node ./tests/api/test.ts",
-    "tests": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/unit/**/*.ts'"
+    "test": "./scripts/tests.sh"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",
