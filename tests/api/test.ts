@@ -137,7 +137,7 @@ class LandFactory {
 
     create(): Land {
         this.logger_.debug("LandFactory create a new Land")
-        return new Land(0, 0, this.logger_)
+        return new Land(64, 64, this.logger_)
     }
 }
 
@@ -151,6 +151,14 @@ class Land {
         private height_: number,
         private logger_: Logger,
     ) { }
+
+    get width() {
+        return this.width_
+    }
+
+    get height() {
+        return this.height_
+    }
 }
 
 const container = new Container()
@@ -174,3 +182,8 @@ building.repair()
 building.repair()
 
 const land = container.get(Land)
+
+const landId = Symbol("land")
+
+container.set(landId, land)
+logger.log(`land size is width=${(container.get(landId) as Land).width} height=${(container.get(landId) as Land).height}`)
